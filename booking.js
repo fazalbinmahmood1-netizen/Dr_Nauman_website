@@ -6,20 +6,22 @@ let pending = false;
 booking.addEventListener('submit', async event => {
   event.preventDefault();
   if (pending) return;
-  const payload = Object.fromEntries(new FormData(booking));
+  const payload = new FormData(booking);
   // An optional blank reply address should not be passed as an email header.
-  if (!payload.email) delete payload.email;
-  payload._subject = 'Consultation request — ' + payload.clinic;
-  payload._template = 'table';
+  if (!payload.get('email')) payload.delete('email');
+  payload.set('_subject', 'Consultation request — ' + payload.get('clinic'));
+  payload.set('_template', 'table');
   pending = true;
   submit.disabled = true;
   statusLine.textContent = 'Sending your request…';
   try {
-    const endpoint = '/api/consultation';
+    const endpoint = new URL(booking.action);
+    endpoint.pathname = '/ajax' + endpoint.pathname;
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      referrerPolicy: 'origin',
+      headers: { Accept: 'application/json' },
+      body: payload,
       signal: AbortSignal.timeout(25000)
     });
     const result = await response.json();

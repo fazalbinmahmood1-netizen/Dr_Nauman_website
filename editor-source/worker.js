@@ -50,26 +50,6 @@ const reply=(body,type='text/plain',status=200)=>new Response(body,{status,heade
 async function state(env){const obj=await env.BUCKET.get('blog/catalog-v1');return {posts:obj?await obj.json():{...seeds},etag:obj?.etag};}
 export default {async fetch(req,env){
  const u=new URL(req.url), path=u.pathname;
- if(path==='/api/consultation'){
-  if(req.method!=='POST'||req.headers.get('Origin')!==u.origin)return reply('Invalid submission.',undefined,403);
-  if(!req.headers.get('content-type')?.startsWith('application/json'))return reply('Invalid format.',undefined,415);
-  const raw=await req.text();if(raw.length>5000)return reply('Request too large.',undefined,413);
-  let fields;try{fields=JSON.parse(raw)}catch{return reply('Invalid form.',undefined,400)}
-  const limits={patient:100,phone:40,email:254,clinic:100,date:10,time:30,notes:400};
-  const data={};
-  for(const [k,max] of Object.entries(limits)){
-   const value=fields?.[k]??'';
-   if(typeof value!=='string'||value.length>max)return reply('Check the form fields.',undefined,400);
-   if(value.trim())data[k]=value.trim();
-  }
-  if(!data.patient||!data.phone||!['Hassan Hospital','Surriya Anwar Hospital','No preference'].includes(data.clinic))return reply('Check name, phone and clinic.',undefined,400);
-  try{
-   const upstream=await fetch('https://formsubmit.co/ajax/mnbashir360@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','Referer':base,'Origin':new URL(base).origin},body:JSON.stringify({...data,_subject:'Consultation request — '+data.clinic,_template:'table'}),signal:AbortSignal.timeout(20000)});
-   const result=await upstream.json();
-   if(upstream.ok&&String(result.success)==='true'&&!/activat|verify/i.test(result.message||''))return reply('{"success":true}','application/json');
-  }catch{}
-  return reply('Delivery could not be confirmed.',undefined,502);
- }
  if(path==='/'&&u.hostname==='manage.drnaumanbashir.com')return Response.redirect(u.origin+'/manage/',302);
  const protectedRoute=path==='/manage'||path==='/manage/'||path.startsWith('/api/editor/');
  if(protectedRoute){
