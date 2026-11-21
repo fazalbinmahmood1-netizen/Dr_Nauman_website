@@ -14,3 +14,5 @@ document.addEventListener('keydown', event => {
   }
 });
 matchMedia('(min-width:981px)').addEventListener('change', () => setMenu(false));
+const topLink = document.querySelector('.top');
+window.addEventListener('scroll', () => topLink.classList.toggle('visible', window.scrollY > 300), {passive:true});
