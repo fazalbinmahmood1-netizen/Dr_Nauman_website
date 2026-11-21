@@ -15,8 +15,7 @@ booking.addEventListener('submit', async event => {
   submit.disabled = true;
   statusLine.textContent = 'Sending your request…';
   try {
-    const endpoint = new URL(booking.action);
-    endpoint.pathname = '/ajax' + endpoint.pathname;
+    const endpoint = '/api/consultation';
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
