@@ -42,3 +42,4 @@ footer{border-top:3px solid var(--gold)}.foot{grid-template-columns:1.9fr 1fr 1f
     mask-image: var(--hero-fade);
   }
 }
+.blog-heading{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}.blog-heading .button,.guidegrid article>a.button{font-size:.8rem;padding:.7em 1.15em}

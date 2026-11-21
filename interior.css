@@ -6,3 +6,4 @@
 .location small {display:block;margin-top:.35rem}
 .directions {display:inline-flex;align-items:center;gap:.4rem;font-weight:600}
 .location,.booking aside {scroll-margin-top:1rem}
+.reading{width:min(88%,72ch);margin:clamp(32px,5vw,76px) auto;color:#242424;line-height:1.8}.reading h1{font-size:clamp(32px,4vw,57px);color:var(--ink);line-height:1.16}.reading h2,.blog-index h2{font-size:clamp(23px,2.2vw,34px);line-height:1.25}.reading h2{margin:2em 0 .5em}.reading h3{font-size:1.28rem;margin:1.6em 0 .5em}.reading a,.blog-index a{text-decoration:underline;text-underline-offset:.18em}.blog-index{padding-block:3rem}.blog-index>p{max-width:75ch}.blog-index>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:1.4rem;margin-top:2rem}.blog-index article{padding:1.5rem;background:#faf8f4;border-top:2px solid var(--gold)}.blog-index h2 a{text-decoration:none}.blog-index h2 a:hover{text-decoration:underline}
