@@ -32,9 +32,15 @@ async function state(env){const obj=await env.BUCKET.get('blog/catalog-v1');retu
 export default {async fetch(req,env){
  const u=new URL(req.url), path=u.pathname;
  if(path==='/'&&u.hostname==='manage.drnaumanbashir.com')return Response.redirect(u.origin+'/manage/',302);
+ const protectedRoute=path==='/manage'||path==='/manage/'||path.startsWith('/api/editor/');
+ if(protectedRoute){
+  const expected=env.EDITOR_PASSWORD && 'Basic '+btoa('dnb:'+env.EDITOR_PASSWORD);
+  if(!expected||req.headers.get('Authorization')!==expected){
+   return new Response('Editor sign-in required.',{status:401,headers:{'WWW-Authenticate':'Basic realm="Dr Nauman blog editor", charset="UTF-8"','Cache-Control':'no-store'}});
+  }
+ }
  if(path==='/manage'||path==='/manage/')return reply(editor,'text/html;charset=utf-8');
  if(path.startsWith('/api/editor/')){
-  if(!env.PUBLISH_KEY||req.headers.get('Authorization')!=='Bearer '+env.PUBLISH_KEY)return reply('Publishing link required.',undefined,403);
   if(req.method!=='GET'&&req.headers.get('Origin')!==u.origin)return reply('Origin mismatch.',undefined,403);
   if(path==='/api/editor/image'&&req.method==='POST'){
    if(Number(req.headers.get('content-length'))>3000000)return reply('Maximum image size is 3 MB.',undefined,413);
